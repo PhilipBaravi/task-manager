@@ -31,10 +31,19 @@ export const getTask = async (req, res) => {
   }
 };
 
-export const updateTask = (req, res) => {
+export const updateTask = async (req, res) => {
   res.send("Update a task");
 };
 
-export const deleteTask = (req, res) => {
-  res.send("Delete a task");
+export const deleteTask = async (req, res) => {
+  try {
+    const { id: taskID } = req.params;
+    const task = await Task.findOneAndDelete({ _id: taskID });
+    if (!task) {
+      return res.status(401).json({ msg: `No task with id : ${taskID}` });
+    }
+    res.status(200).json({ task });
+  } catch (error) {
+    res.status(500).json({ msg: errpr });
+  }
 };
